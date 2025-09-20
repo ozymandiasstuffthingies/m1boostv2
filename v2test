@@ -1,0 +1,246 @@
+wait(2)
+local localplr = game.Players.LocalPlayer
+
+local strength = 15
+local range = 22
+
+function findNearestTorso(pos)
+	local char = localplr.Character
+	local list = game.Workspace:GetDescendants()
+	local torso = nil
+	local dist = math.huge
+	local temp = nil
+	local human = nil
+	local temp2 = nil
+	for x = 1, #list do
+		temp2 = list[x]
+		if (temp2.className == "Model") and (temp2 ~= char) then
+			temp = temp2:findFirstChild("HumanoidRootPart")
+			human = temp2:findFirstChildOfClass("Humanoid")
+			if (temp ~= nil) and (human ~= nil) and (human.Health > 0) then
+				if (temp.Position - pos).magnitude < dist then
+					torso = temp
+					dist = (temp.Position - pos).magnitude
+				end
+			end
+		end
+	end
+	return torso
+end
+
+if localplr.PlayerGui:FindFirstChild("Mobile") then
+	local tween = game:GetService("TweenService")
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "M1Boost"
+	gui.Parent = localplr.PlayerGui
+	gui.ResetOnSpawn = false
+	local frame = Instance.new("Frame")
+	frame.Parent = gui
+	frame.Size = UDim2.new(0.137, 0, 0, 0)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.BackgroundColor3 = Color3.fromRGB(40,40,40)
+	local corner = Instance.new("UICorner")
+	corner.Parent = frame
+	corner.CornerRadius = UDim.new(0, 2)
+	local ratio = Instance.new("UIAspectRatioConstraint")
+	ratio.Parent = frame
+	ratio.AspectRatio = 1.362
+	ratio.AspectType = Enum.AspectType.FitWithinMaxSize
+	ratio.DominantAxis = Enum.DominantAxis.Width
+	local anim = tween:Create(frame, TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.In,0,false,0), {Size = UDim2.new(0.137,0,0.217,0), Position = UDim2.new(0.431,0,0.391,0)})
+	anim:Play()
+	task.wait(1)
+	frame.Draggable = true
+	frame.Active = true
+	frame.Selectable = true
+	local version = Instance.new("TextBox")
+	version.Parent = frame
+	version.BackgroundTransparency = 1
+	version.FontFace = Font.fromName("ComicNeueAngular",Enum.FontWeight.Medium,Enum.FontStyle.Normal)
+	version.Position = UDim2.new(0.831,0,0.831,0)
+	version.Size = UDim2.new(0.13,0,0.115,0)
+	version.Interactable = false
+	version.TextColor3 = Color3.fromRGB(255,255,255)
+	version.TextScaled = true
+	version.Text = "V2"
+	local a1 = version:Clone()
+	local a2 = version:Clone()
+	local a3 = version:Clone()
+	a1.Text = "strength"
+	a1.Position = UDim2.new(0.107,0,0.162,0)
+	a1.Size = UDim2.new(0.542,0,0.185,0)
+	a1.Parent = frame
+	a2.Text = "range"
+	a2.Position = UDim2.new(0.107,0,0.362,0)
+	a2.Size = UDim2.new(0.542,0,0.2,0)
+	a2.Parent = frame
+	a3.Text = "on/off"
+	a3.Position = UDim2.new(0.158,0,0.622,0)
+	a3.Size = UDim2.new(0.328,0,0.254,0)
+	a3.Parent = frame
+	local button1 = Instance.new("TextBox")
+	button1.Parent = frame
+	button1.BackgroundTransparency = 0
+	button1.ClearTextOnFocus = false
+	button1.Interactable = true
+	button1.FontFace = Font.fromName("ComicNeueAngular",Enum.FontWeight.Medium,Enum.FontStyle.Normal)
+	button1.TextScaled = true
+	local cornerforbutton = Instance.new("UICorner")
+	cornerforbutton.Parent = button1
+	cornerforbutton.CornerRadius = UDim.new(0,4)
+	local cornerforbutonn = cornerforbutton:Clone()
+	button1.Position = UDim2.new(0.65,0,0.185,0)
+	button1.Size = UDim2.new(0.266,0,0.162,0)
+	button1.Text = "15"
+	local button2 = button1:Clone()
+	button2.Parent = frame
+	button2.Position = UDim2.new(0.65,0,0.385,0)
+	button2.Size = UDim2.new(0.266,0,0.162,0)
+	button2.Text = "22"
+	local onoffbutton = Instance.new("TextButton")
+	onoffbutton.Parent = frame
+	cornerforbutonn.Parent = onoffbutton
+	onoffbutton.BackgroundColor3 = Color3.fromRGB(255,0,0)
+	onoffbutton.Interactable = true
+	onoffbutton.Position = UDim2.new(0.542,0,0.677,0)
+	onoffbutton.Size = UDim2.new(0.198,0,0.185,0)
+	onoffbutton.TextScaled = true
+	onoffbutton.Text = "button"
+	onoffbutton.TextColor3 = Color3.fromRGB(0,0,0)
+	
+	local mobileframe = localplr.PlayerGui.Mobile.Frame
+	local button = mobileframe:FindFirstChild("M1")
+
+	local holding = false
+
+	local userinputservice = game:GetService("UserInputService")
+	local debris = game:GetService("Debris")
+	local runservice = game:GetService("RunService")
+	
+	local currentvelo = nil
+	
+	local on = false
+
+	button.MouseButton1Down:Connect(function()
+		holding = true
+		while holding == true and on == true do
+			if localplr.Character ~= nil then
+				local char = localplr.Character
+				local enemy = findNearestTorso(char:FindFirstChild("HumanoidRootPart").Position)
+				if enemy ~= nil then
+					if (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude < range then
+						if char:FindFirstChildOfClass("Humanoid") then
+							local hum = char:FindFirstChildOfClass("Humanoid")
+							if hum.WalkSpeed ~= 0 then
+								if hum.Health > 0 then
+									if hum.MoveDirection ~= Vector3.new(0,0,0) then
+										if hum.FloorMaterial ~= Enum.Material.Air then
+											print((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude)
+											if currentvelo == nil then
+												local velo = Instance.new("BodyVelocity")
+												velo.MaxForce = Vector3.new(10000, 0, 10000)
+												velo.Velocity = (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).unit *((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude*strength)
+												velo.Parent = char:FindFirstChild("HumanoidRootPart")
+												currentvelo = velo
+											else
+												currentvelo.Velocity = (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).unit *((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude*strength)
+											end
+										else
+											if currentvelo ~= nil then
+												debris:AddItem(currentvelo,0)
+												currentvelo = nil
+											end
+										end
+									else
+										if currentvelo ~= nil then
+											debris:AddItem(currentvelo,0)
+											currentvelo = nil
+										end
+									end
+								else
+									if currentvelo ~= nil then
+										debris:AddItem(currentvelo,0)
+										currentvelo = nil
+									end
+								end
+							else
+								if currentvelo ~= nil then
+									debris:AddItem(currentvelo,0)
+									currentvelo = nil
+								end
+							end
+						else
+							if currentvelo ~= nil then
+								debris:AddItem(currentvelo,0)
+								currentvelo = nil
+							end
+						end
+					else
+						if currentvelo ~= nil then
+							debris:AddItem(currentvelo,0)
+							currentvelo = nil
+						end
+					end
+				else
+					if currentvelo ~= nil then
+						debris:AddItem(currentvelo,0)
+						currentvelo = nil
+					end
+				end
+				task.wait()
+			end
+			
+		end
+	end)
+	button.MouseButton1Up:Connect(function()
+		if holding == true then
+			holding = false
+			if currentvelo ~= nil then
+				debris:AddItem(currentvelo,0)
+				currentvelo = nil
+			end
+		else
+			if currentvelo ~= nil then
+				debris:AddItem(currentvelo,0)
+				currentvelo = nil
+			end
+		end
+	end)
+	button.InputEnded:Connect(function()
+		if holding == true then
+			holding = false
+			if currentvelo ~= nil then
+				debris:AddItem(currentvelo,0)
+				currentvelo = nil
+			end
+		else
+			if currentvelo ~= nil then
+				debris:AddItem(currentvelo,0)
+				currentvelo = nil
+			end
+		end
+	end)
+	button1:GetPropertyChangedSignal("Text"):Connect(function()
+		if button1.Text:match("%d+") then
+			strength = tonumber(string.match(button1.Text, "%-?%d+") or string.match(button1.Text, "%-?%d+%.?%d+"))
+		else
+			button1.Text = ""
+		end
+	end)
+	button2:GetPropertyChangedSignal("Text"):Connect(function()
+		if button2.Text:match("%d+") then
+			range = tonumber(string.match(button2.Text, "%-?%d+") or string.match(button2.Text, "%-?%d+%.?%d+"))
+		else
+			button2.Text = ""
+		end
+	end)
+	onoffbutton.Activated:Connect(function()
+		if on == false then
+			on = true
+			onoffbutton.BackgroundColor3 = Color3.fromRGB(0,255,0)
+		else
+			on = false
+			onoffbutton.BackgroundColor3 = Color3.fromRGB(255,0,0)
+		end
+	end)
+end
