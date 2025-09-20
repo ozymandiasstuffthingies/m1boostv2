@@ -118,7 +118,7 @@ if localplr.PlayerGui:FindFirstChild("Mobile") then
 	close.Position = UDim2.new(0.859,0,0,0)
 	close.Size = UDim2.new(0.141,0,0.093,0)
 	cornerforbutonn.Parent = onoffbutton
-	
+
 	local mobileframe = localplr.PlayerGui.Mobile.Frame
 	local button = mobileframe:FindFirstChild("M1")
 
@@ -127,9 +127,9 @@ if localplr.PlayerGui:FindFirstChild("Mobile") then
 	local userinputservice = game:GetService("UserInputService")
 	local debris = game:GetService("Debris")
 	local runservice = game:GetService("RunService")
-	
+
 	local currentvelo = nil
-	
+
 	local on = false
 	local minimized = false
 
@@ -145,28 +145,30 @@ if localplr.PlayerGui:FindFirstChild("Mobile") then
 							local hum = char:FindFirstChildOfClass("Humanoid")
 							if hum.WalkSpeed ~= 0 then
 								if hum.Health > 0 then
-									if hum.MoveDirection ~= Vector3.new(0,0,0) then
-										if hum.FloorMaterial ~= Enum.Material.Air then
-											print((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude)
-											if currentvelo == nil then
-												local velo = Instance.new("BodyVelocity")
-												velo.MaxForce = Vector3.new(10000, 0, 10000)
-												velo.Velocity = (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).unit *((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude*strength)
-												velo.Parent = char:FindFirstChild("HumanoidRootPart")
-												currentvelo = velo
+									if enemy:FindFirstChildOfClass("Humanoid"):GetState() ~= Enum.HumanoidStateType.Physics then
+										if hum.MoveDirection ~= Vector3.new(0,0,0) then
+											if hum.FloorMaterial ~= Enum.Material.Air then
+												print((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude)
+												if currentvelo == nil then
+													local velo = Instance.new("BodyVelocity")
+													velo.MaxForce = Vector3.new(10000, 0, 10000)
+													velo.Velocity = (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).unit *((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude*strength)
+													velo.Parent = char:FindFirstChild("HumanoidRootPart")
+													currentvelo = velo
+												else
+													currentvelo.Velocity = (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).unit *((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude*strength)
+												end
 											else
-												currentvelo.Velocity = (enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).unit *((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude*strength)
+												if currentvelo ~= nil then
+													debris:AddItem(currentvelo,0)
+													currentvelo = nil
+												end
 											end
 										else
 											if currentvelo ~= nil then
 												debris:AddItem(currentvelo,0)
 												currentvelo = nil
 											end
-										end
-									else
-										if currentvelo ~= nil then
-											debris:AddItem(currentvelo,0)
-											currentvelo = nil
 										end
 									end
 								else
@@ -201,7 +203,7 @@ if localplr.PlayerGui:FindFirstChild("Mobile") then
 				end
 				task.wait()
 			end
-			
+
 		end
 	end)
 	button.MouseButton1Up:Connect(function()
