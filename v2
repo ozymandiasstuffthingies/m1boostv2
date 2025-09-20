@@ -145,7 +145,7 @@ if localplr.PlayerGui:FindFirstChild("Mobile") then
 							local hum = char:FindFirstChildOfClass("Humanoid")
 							if hum.WalkSpeed ~= 0 then
 								if hum.Health > 0 then
-									if enemy:FindFirstChildOfClass("Humanoid"):GetState() ~= Enum.HumanoidStateType.Physics then
+									if enemy.Parent:FindFirstChildOfClass("Humanoid"):GetState() ~= Enum.HumanoidStateType.Physics then
 										if hum.MoveDirection ~= Vector3.new(0,0,0) then
 											if hum.FloorMaterial ~= Enum.Material.Air then
 												print((enemy.Position - char:FindFirstChild("HumanoidRootPart").Position).Magnitude)
